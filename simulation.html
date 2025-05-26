@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <title>Simulation Boursière</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { border-collapse: collapse; width: 80%; margin-bottom: 20px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+        th { background-color: #f2f2f2; }
+        .historique { max-width: 80%; }
+    </style>
+</head>
+<body>
+    <h1>Cycle {{ cycle }}</h1>
+    <h2>Solde : {{ solde }} €</h2>
+    <h3>Portefeuille :</h3>
+    <ul>
+        {% for action, qty in portefeuille.items() %}
+            <li>{{ action }} : {{ qty }} actions</li>
+        {% else %}
+            <li>Vide</li>
+        {% endfor %}
+    </ul>
+
+    <h3>Marché actuel :</h3>
+    <table>
+        <tr>
+            <th>Action</th>
+            <th>Prix (€)</th>
+            <th>Variation (%)</th>
+            <th>Volume</th>
+        </tr>
+        {% for action, data in marche.items() %}
+        <tr>
+            <td>{{ action }}</td>
+            <td>{{ data.prix }}</td>
+            <td style="color: {{ 'green' if data.variation >= 0 else 'red' }}">{{ data.variation }}</td>
+            <td>{{ data.volume }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h3>Dernières opérations :</h3>
+    <ul class="historique">
+        {% for event in historique %}
+            <li>{{ event }}</li>
+        {% else %}
+            <li>Aucune opération</li>
+        {% endfor %}
+    </ul>
+
+    <form method="POST" action="{{ url_for('simulation') }}">
+        <button type="submit">Lancer le cycle suivant</button>
+    </form>
+</body>
+</html>
