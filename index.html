@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simulateur de Bourse</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #f4f4f4; }
+        h1 { color: #333; }
+        .stock { background: white; padding: 10px; margin-bottom: 10px; border-radius: 5px; }
+        .gain { color: green; }
+        .loss { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Simulation de Marché Boursier</h1>
+    <div id="market"></div>
+    <button onclick="nextCycle()">Cycle Suivant</button>
+
+    <script>
+        const stocks = [
+            { name: "ACTION1", price: 50 },
+            { name: "ACTION2", price: 40 },
+            { name: "ACTION3", price: 30 },
+            { name: "ACTION4", price: 70 },
+            { name: "ACTION5", price: 60 },
+        ];
+
+        let cycle = 1;
+
+        function simulateVariation(price) {
+            let variation = (Math.random() * 6 - 3).toFixed(2); // entre -3% et +3%
+            let newPrice = (price * (1 + variation / 100)).toFixed(2);
+            return [parseFloat(newPrice), parseFloat(variation)];
+        }
+
+        function displayMarket() {
+            const marketDiv = document.getElementById("market");
+            marketDiv.innerHTML = `<h2>=== CYCLE ${cycle} ===</h2>`;
+            stocks.forEach(stock => {
+                const [newPrice, variation] = simulateVariation(stock.price);
+                let color = variation >= 0 ? "gain" : "loss";
+                marketDiv.innerHTML += `
+                    <div class="stock">
+                        <strong>${stock.name}</strong> |
+                        Prix: ${newPrice}€ |
+                        <span class="${color}">Variation: ${variation}%</span>
+                    </div>
+                `;
+                stock.price = newPrice;
+            });
+        }
+
+        function nextCycle() {
+            cycle++;
+            displayMarket();
+        }
+
+        // Premier affichage
+        displayMarket();
+    </script>
+</body>
+</html>
